@@ -79,35 +79,37 @@ class _LoginFormState extends State<LoginForm> {
         ListView(
           children: <Widget>[
             Container(
-              // constraints: BoxConstraints.tightFor(height: double.infinity),
-              height: 60,
-              margin: EdgeInsets.only(top: 200),
-              // padding: EdgeInsets.only(top: 70, bottom: 20, left: 40, right: 40),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40.0),
-                    topRight: Radius.circular(40.0)),
-              ),
-              // child:
-            ),
+                // constraints: BoxConstraints.tightFor(height: double.infinity),
+                height: 60,
+                padding: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width * 3 / 4 - 70),
+                // padding: EdgeInsets.only(top: 70, bottom: 20, left: 40, right: 40),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40.0),
+                      topRight: Radius.circular(40.0)),
+                )),
             TextFormField(
               controller: _uEmailController,
               decoration: InputDecoration(
-                hintText: '请输入邮箱',
-                prefixIcon: Icon(
-                  Icons.email,
-                  color: Color(0xff28c4ea),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: () {
-                    _uEmailController.text = '';
-                  },
-                  color: Colors.black26,
-                ),
-              ),
-            ),
+                  hintText: '请输入邮箱',
+                  prefixIcon: Icon(
+                    Icons.email,
+                    color: Color(0xff28c4ea),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      _uEmailController.text = '';
+                    },
+                    color: Colors.black26,
+                  ),
+                  border: InputBorder.none),
+            ).intoContainer(
+                color: Colors.white,
+                padding: EdgeInsets.only(left: 40, right: 40, top: 10)),
             TextFormField(
               controller: _pwdController,
               decoration: InputDecoration(
@@ -122,18 +124,28 @@ class _LoginFormState extends State<LoginForm> {
                       _pwdController.text = '';
                     },
                     color: Colors.black26,
-                  )),
+                  ),
+                  border: InputBorder.none),
+            ).intoContainer(
+                color: Colors.white,
+                padding: EdgeInsets.only(left: 40, right: 40, top: 10)),
+            _LoginButton(
+              onLogin: _onLogin,
+            ).intoContainer(
+              padding: EdgeInsets.only(top: 40),
             ),
+            Text(
+              '本软件完全开源，代码仓库Github',
+              style: TextStyle(
+                color: Color(0xFF999999),
+              ),
+              textAlign: TextAlign.center,
+            ).intoContainer(padding: EdgeInsets.all(30)),
           ],
         ),
-        Positioned(
-          top: 450,
-          child: _LoginButton(
-            onLogin: _onLogin,
-          ),
-        )
       ],
     ).intoContainer(color: Colors.white);
+    // .intoContainer(color: Colors.white);
   }
 
   void _onLogin() async {
@@ -175,33 +187,29 @@ class _LoginButton extends StatefulWidget {
 class _LoginButtonState extends State<_LoginButton>
     with SingleTickerProviderStateMixin {
   AnimationController btnController;
-  Animation squeezeAnimation;
+  Animation squeezeBtnAnimation;
 
   @override
   void initState() {
     super.initState();
     btnController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 750));
-    squeezeAnimation = new Tween(
+      vsync: this,
+      duration: new Duration(milliseconds: 1000),
+    );
+    squeezeBtnAnimation = new Tween(
       begin: 240.0,
       end: 48.0,
     ).animate(
       new CurvedAnimation(
-          parent: btnController, curve: new Interval(0.0, 0.25)),
+          parent: btnController, curve: new Interval(0.000, 0.250)),
     )..addListener(() {
         setState(() {});
       });
   }
 
   onTap() {
-    _playAnimation();
-  }
-
-  Future<Null> _playAnimation() async {
-    try {
-      await btnController.forward();
-      await btnController.reverse();
-    } on TickerCanceled {}
+    // _playAnimation();
+    btnController.forward();
   }
 
   @override
@@ -209,9 +217,9 @@ class _LoginButtonState extends State<_LoginButton>
     return Center(
       child: Button(
         height: 48,
-        width: squeezeAnimation.value,
+        width: squeezeBtnAnimation.value,
         colors: [Color(0xff28c4ea), Color(0xff17beb2)],
-        child: squeezeAnimation.value > 80
+        child: squeezeBtnAnimation.value > 80
             ? Text(
                 '登 录',
                 style: TextStyle(fontSize: 18),
@@ -219,9 +227,8 @@ class _LoginButtonState extends State<_LoginButton>
             : new CircularProgressIndicator(
                 valueColor: new AlwaysStoppedAnimation(Colors.white),
               ),
-        // onPressed: widget.onLogin,
         onPressed: () {
-          // btnController.forward();
+          // widget.onLogin();
           onTap();
         },
       ),
@@ -235,11 +242,7 @@ class _LoginButtonState extends State<_LoginButton>
   }
 }
 
-extension WidgeExt on Widget {
-  // List<Widget> addNeighbor(Widget widget) {
-  //   return <Widget>[this, widget];
-  // }
-
+extension _WidgeExt on Widget {
   Container intoContainer({
     Key key,
     AlignmentGeometry alignment,

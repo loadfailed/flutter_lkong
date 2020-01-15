@@ -41,8 +41,14 @@ class Global {
   }
 
   // 持久化Profile信息
-  static saveProfile() =>
-      {_prefs.setString("profile", jsonEncode(profile.toJson()))};
+  // static saveProfile() => {
+  //       _prefs.setString(
+  //           "profile",
+  //           jsonEncode(
+  //             profile.toJson(),
+  //           )),
+  //       print('done')
+  //     };
 }
 
 // 共享状态基类
@@ -50,7 +56,7 @@ class ProfileChangeNotifier extends ChangeNotifier {
   Profile get _profile => Global.profile;
   @override
   void notifyListeners() {
-    Global.saveProfile(); //保存Profile变更
+    // Global.saveProfile(); //保存Profile变更
     super.notifyListeners(); //通知依赖的Widget更新
   }
 }
@@ -69,13 +75,13 @@ class UserModel extends ProfileChangeNotifier {
 }
 
 // 主题状态
-class ThemeModel extends ProfileChangeNotifier {
-  ColorSwatch get theme => Global.themes
-      .firstWhere((e) => e.value == _profile.theme, orElse: () => Colors.blue);
-  set theme(ColorSwatch color) {
-    if (color != theme) {
-      _profile.theme = color[500].value;
-      notifyListeners();
-    }
-  }
-}
+// class ThemeModel extends ProfileChangeNotifier {
+//   ColorSwatch get theme => Global.themes
+//       .firstWhere((e) => e.value == _profile.theme, orElse: () => Colors.blue);
+//   set theme(ColorSwatch color) {
+//     if (color != theme) {
+//       _profile.theme = color[500].value;
+//       notifyListeners();
+//     }
+//   }
+// }

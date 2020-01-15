@@ -19,15 +19,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: ThemeModel()),
+        // ChangeNotifierProvider.value(value: ThemeModel()),
         ChangeNotifierProvider.value(value: UserModel()),
       ],
-      child: Consumer<ThemeModel>(
+      child: Consumer<UserModel>(
         builder: (BuildContext context, themeModel, Widget child) {
           return MaterialApp(
-            theme: ThemeData(
-              primarySwatch: themeModel.theme,
-            ),
             title: '我的APP',
             initialRoute: "/", //名为'/'的路由作为应用的home(首页)
             routes: <String, WidgetBuilder>{
