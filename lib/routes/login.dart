@@ -6,6 +6,7 @@ import 'package:myapp/components/index.dart';
 import 'package:myapp/models/index.dart';
 import 'package:provider/provider.dart';
 
+// 登录页面
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => new _LoginState();
@@ -42,6 +43,7 @@ class _LoginState extends State<Login> {
   }
 }
 
+// 登录表单
 class LoginForm extends StatefulWidget {
   LoginForm({Key key}) : super(key: key);
 
@@ -68,99 +70,70 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        constraints: BoxConstraints.expand(),
-        color: Colors.white,
-        child: ListView(
-          shrinkWrap: true,
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: <Widget>[
+        Image(
+          image: AssetImage("images/login.png"),
+        ),
+        ListView(
           children: <Widget>[
-            Image(
-              image: AssetImage('images/login.png'),
-            ),
             Container(
-              height: 48,
-              child: Align(
-                alignment: FractionalOffset(0.1, -10),
-                child: Container(
-                  height: 44,
-                  padding: EdgeInsets.only(top: 20),
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40.0),
-                        topRight: Radius.circular(40.0)),
+              // constraints: BoxConstraints.tightFor(height: double.infinity),
+              height: 60,
+              margin: EdgeInsets.only(top: 200),
+              // padding: EdgeInsets.only(top: 70, bottom: 20, left: 40, right: 40),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40.0),
+                    topRight: Radius.circular(40.0)),
+              ),
+              // child:
+            ),
+            TextFormField(
+              controller: _uEmailController,
+              decoration: InputDecoration(
+                hintText: '请输入邮箱',
+                prefixIcon: Icon(
+                  Icons.email,
+                  color: Color(0xff28c4ea),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    _uEmailController.text = '';
+                  },
+                  color: Colors.black26,
+                ),
+              ),
+            ),
+            TextFormField(
+              controller: _pwdController,
+              decoration: InputDecoration(
+                  hintText: '请输入密码',
+                  prefixIcon: Icon(
+                    Icons.vpn_key,
+                    color: Color(0xff28c4ea),
                   ),
-                  // child: Text(
-                  //   'login ',
-                  //   style: TextStyle(
-                  //     color: Color(0xffA5EEE0),
-                  //     fontSize: 20,
-                  //   ),
-                  //   textAlign: TextAlign.center,
-                  // ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 40, right: 40),
-              child: Form(
-                child: TextFormField(
-                  controller: _uEmailController,
-                  decoration: InputDecoration(
-                      hintText: '请输入邮箱',
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: Color(0xff28c4ea),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () {
-                          _uEmailController.text = '';
-                        },
-                        color: Colors.black26,
-                      ),
-                      border: InputBorder.none),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10, left: 40, right: 40),
-              child: Form(
-                child: TextFormField(
-                    controller: _pwdController,
-                    decoration: InputDecoration(
-                        hintText: '请输入密码',
-                        prefixIcon: Icon(
-                          Icons.vpn_key,
-                          color: Color(0xff28c4ea),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.clear),
-                          onPressed: () {
-                            _pwdController.text = '';
-                          },
-                          color: Colors.black26,
-                        ),
-                        border: InputBorder.none)),
-              ),
-            ),
-            Padding(
-                padding: EdgeInsets.only(top: 40, left: 40, right: 40),
-                child: _LoginButton(
-                  onLogin: _onLogin,
-                )),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: Center(
-                child: Text(
-                  '本软件已开源，请勿商用',
-                  style: TextStyle(color: Color(0xffbbbbbb)),
-                ),
-              ),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      _pwdController.text = '';
+                    },
+                    color: Colors.black26,
+                  )),
             ),
           ],
-        ));
+        ),
+        Positioned(
+          top: 450,
+          child: _LoginButton(
+            onLogin: _onLogin,
+          ),
+        )
+      ],
+    ).intoContainer(color: Colors.white);
   }
 
   void _onLogin() async {
@@ -171,10 +144,10 @@ class _LoginFormState extends State<LoginForm> {
       "rememberme": "on"
     };
     if (_uEmailController.toString().isEmpty) {
-      print('邮箱不能为空');
+      print('邮箱不能为空');
     } else if (_pwdController.toString().isEmpty) {
       // showToast();
-      print('密码不能为空');
+      print('密码不能为空');
     } else {
       User user;
       try {
@@ -190,37 +163,109 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
+// 登录按钮
 class _LoginButton extends StatefulWidget {
   _LoginButton({Key key, @required this.onLogin}) : super(key: key);
   final Function onLogin;
 
   @override
-  _LoginButtonState createState() => _LoginButtonState(onLogin: onLogin);
+  _LoginButtonState createState() => _LoginButtonState();
 }
 
 class _LoginButtonState extends State<_LoginButton>
     with SingleTickerProviderStateMixin {
-  _LoginButtonState({Key key, @required this.onLogin});
+  AnimationController btnController;
+  Animation squeezeAnimation;
 
-  final Function onLogin;
-  AnimationController colorController;
   @override
   void initState() {
     super.initState();
-    colorController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 3000));
+    btnController = new AnimationController(
+        vsync: this, duration: new Duration(milliseconds: 750));
+    squeezeAnimation = new Tween(
+      begin: 240.0,
+      end: 48.0,
+    ).animate(
+      new CurvedAnimation(
+          parent: btnController, curve: new Interval(0.0, 0.25)),
+    )..addListener(() {
+        setState(() {});
+      });
+  }
+
+  onTap() {
+    _playAnimation();
+  }
+
+  Future<Null> _playAnimation() async {
+    try {
+      await btnController.forward();
+      await btnController.reverse();
+    } on TickerCanceled {}
   }
 
   @override
   Widget build(BuildContext context) {
-    return Button(
-      height: 48,
-      colors: [Color(0xff28c4ea), Color(0xff17beb2)],
-      child: Text(
-        '登 录',
-        style: TextStyle(fontSize: 18),
+    return Center(
+      child: Button(
+        height: 48,
+        width: squeezeAnimation.value,
+        colors: [Color(0xff28c4ea), Color(0xff17beb2)],
+        child: squeezeAnimation.value > 80
+            ? Text(
+                '登 录',
+                style: TextStyle(fontSize: 18),
+              )
+            : new CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation(Colors.white),
+              ),
+        // onPressed: widget.onLogin,
+        onPressed: () {
+          // btnController.forward();
+          onTap();
+        },
       ),
-      onPressed: onLogin,
+    );
+  }
+
+  @override
+  void dispose() {
+    btnController.dispose();
+    super.dispose();
+  }
+}
+
+extension WidgeExt on Widget {
+  // List<Widget> addNeighbor(Widget widget) {
+  //   return <Widget>[this, widget];
+  // }
+
+  Container intoContainer({
+    Key key,
+    AlignmentGeometry alignment,
+    EdgeInsetsGeometry padding,
+    Color color,
+    Decoration decoration,
+    Decoration foregroundDecoration,
+    double width,
+    double height,
+    BoxConstraints constraints,
+    EdgeInsetsGeometry margin,
+    Matrix4 transform,
+  }) {
+    return Container(
+      key: key,
+      alignment: alignment,
+      padding: padding,
+      color: color,
+      decoration: decoration,
+      foregroundDecoration: foregroundDecoration,
+      width: width,
+      height: height,
+      constraints: constraints,
+      margin: margin,
+      transform: transform,
+      child: this,
     );
   }
 }
