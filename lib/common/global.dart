@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/models/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myapp/common/http.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
@@ -27,28 +26,27 @@ class Global {
 
   // 初始化全局信息，会在APP启动时执行
   static Future init() async {
-    // _prefs = await SharedPreferences.getInstance();
-    // var _profile = _prefs.getString("profile");
-    // if (_profile != null) {
-    //   try {
-    //     profile = Profile.fromJson(jsonDecode(_profile));
-    //   } catch (e) {
-    //     print(e);
-    //   }
-    // }
-    // 如果没有缓存策略，设置默认缓存策略
+    WidgetsFlutterBinding.ensureInitialized();
+    _prefs = await SharedPreferences.getInstance();
+    var _profile = _prefs.getString("profile");
+    if (_profile != null) {
+      try {
+        profile = Profile.fromJson(jsonDecode(_profile));
+      } catch (e) {
+        print(e);
+      }
+    }
     // ...
   }
 
   // 持久化Profile信息
-  // static saveProfile() => {
-  //       _prefs.setString(
-  //           "profile",
-  //           jsonEncode(
-  //             profile.toJson(),
-  //           )),
-  //       print('done')
-  //     };
+  static saveProfile() => {
+        _prefs.setString(
+            "profile",
+            jsonEncode(
+              profile.toJson(),
+            ))
+      };
 }
 
 // 共享状态基类
@@ -56,7 +54,7 @@ class ProfileChangeNotifier extends ChangeNotifier {
   Profile get _profile => Global.profile;
   @override
   void notifyListeners() {
-    // Global.saveProfile(); //保存Profile变更
+    Global.saveProfile(); //保存Profile变更
     super.notifyListeners(); //通知依赖的Widget更新
   }
 }

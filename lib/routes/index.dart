@@ -1,3 +1,3 @@
-export 'home.dart';
-export 'login.dart';
+export './home/home.dart';
+export './login/login.dart';
 export 'themes.dart';

@@ -24,11 +24,14 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<UserModel>(
         builder: (BuildContext context, themeModel, Widget child) {
+          UserModel userModel = Provider.of<UserModel>(context);
           return MaterialApp(
             title: '我的APP',
-            initialRoute: "/", //名为'/'的路由作为应用的home(首页)
+            theme: ThemeData(
+                primaryColor: Color(0xff0099cc),
+                backgroundColor: Color(0xFFf6f6f6)),
+            home: userModel.isLogin ? Home() : Login(),
             routes: <String, WidgetBuilder>{
-              "/": (context) => Home(),
               "login": (context) => Login(),
               "themes": (context) => Themes(),
             },
