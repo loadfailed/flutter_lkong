@@ -22,7 +22,7 @@ class Global {
   // 可选的主题列表
   static List<MaterialColor> get themes => _themes;
   // 是否为release版
-  static bool get isRelease => bool.fromEnvironment("dart.vm.product");
+  static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
 
   // 初始化全局信息，会在APP启动时执行
   static Future init() async {

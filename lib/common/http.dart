@@ -12,39 +12,32 @@ final int connectTimeout = 50000;
 final int receiveTimeout = 10000;
 
 class Http {
-  static Http instance;
   CancelToken cancelToken = new CancelToken();
 
-  static Http getInstance() {
-    if (instance == null) {
-      instance = new Http();
-    }
-    return instance;
-  }
+  static final Http _instance = Http._internal();
+  Dio dio;
+  factory Http() => _instance;
 
-  // 配置网络请求
-  static Dio dio = new Dio(
-    BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: connectTimeout,
-      receiveTimeout: receiveTimeout,
-      headers: {
-        // 请求头配置
+  Http._internal() {
+    // print(dio);
+    // 初始化
+    if (dio == null) {
+      // 配置网络请求
+      Map<String, dynamic> _headers = {
         'Accept': 'application/json, text/plain, */*',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-CN,zh;q=0.9',
         'Connection': 'keep-alive',
-
         'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'
-      },
-      contentType: 'application/x-www-form-urlencoded',
-    ),
-  );
-
-  static void init() async {
-    // 代理调试
-    if (Global.isRelease) {
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36',
+      };
+      BaseOptions options = new BaseOptions(
+        baseUrl: baseUrl,
+        contentType: 'application/x-www-form-urlencoded',
+        headers: _headers,
+      );
+      dio = new Dio(options);
+      // if (Global.isRelease) {
       (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
           (client) {
         // config the http client
@@ -55,10 +48,12 @@ class Http {
         client.badCertificateCallback =
             (X509Certificate cert, String host, int port) => true;
       };
+      // }
+      _setCookie();
     }
   }
 
-  static void setCookie() async {
+  _setCookie() async {
     // cookie持久化保存
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
@@ -66,16 +61,13 @@ class Http {
     dio.interceptors.add(CookieManager(cookieJar));
   }
 
-  get(url, {data, options, cancelToken}) async {
+  get(url, {data}) async {
     Response response;
     try {
-      response = await dio.get(baseUrl + url,
-          queryParameters: data, options: options, cancelToken: cancelToken);
-      print('Get Success --- ${response.statusCode}');
+      response = await dio.get(baseUrl + url, queryParameters: data);
       print('Get Success --- ${response.data}');
       // 响应体
     } on DioError catch (e) {
-      print('Get Error --- $e');
       formatError(e);
     }
     return response.data;
@@ -84,8 +76,9 @@ class Http {
   post(url, {data}) async {
     Response response;
     try {
+      // cookieJar.loadForRequest(Uri.parse("http://lkong.cn/"));
       response = await dio.post(baseUrl + url, data: data);
-      print('Post Success --- ${response.data}');
+      print('Post Success --- $response');
     } on DioError catch (e) {
       print('Post Error --- $e');
       formatError(e);
@@ -124,5 +117,3 @@ class Http {
     }
   }
 }
-
-Http http = new Http();

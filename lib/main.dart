@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: '我的APP',
             theme: ThemeData(
-                primaryColor: Color(0xff0099cc),
+                primaryColor: Color(0xff7DBA9A),
                 backgroundColor: Color(0xFFf6f6f6)),
             home: userModel.isLogin ? Home() : Login(),
             routes: <String, WidgetBuilder>{

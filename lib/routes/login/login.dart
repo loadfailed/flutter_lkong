@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/common/global.dart';
-import 'package:myapp/common/http.dart';
 import 'package:myapp/components/index.dart';
 import 'package:myapp/models/index.dart';
 import 'package:provider/provider.dart';
+
+import 'package:myapp/api/loginApi/loginApi.dart';
 
 // 登录页面
 class Login extends StatefulWidget {
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     )..addListener(() {
         setState(() {});
       });
-    _containerCircleAnimation = new Tween(begin: 440.0, end: 0.0).animate(
+    _containerCircleAnimation = new Tween(begin: 500.0, end: 0.0).animate(
       new CurvedAnimation(
         parent: zoomOutController,
         curve: new Interval(0.25, 0.5),
@@ -161,7 +162,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     } else {
       User user;
       try {
-        var res = await http.post('login', data: data);
+        var res = await LoginApi.login();
         user = User.fromJson(res);
         await zoomOutController.forward();
         Provider.of<UserModel>(context, listen: false).user = user;
@@ -189,7 +190,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           ? _squeezeBtnAnimation.value
           : _zoomOutAnimation.value,
       height: _zoomOutAnimation.value == 48.0 ? 48.0 : _zoomOutAnimation.value,
-      colors: [Color(0xff28c4ea), Color(0xff17beb2)],
+      colors: [Colors.cyan, Colors.blue, Colors.blueAccent],
       child: _squeezeBtnAnimation.value > 48.0
           ? Text(
               '登 录',
