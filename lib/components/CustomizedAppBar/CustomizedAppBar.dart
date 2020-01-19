@@ -164,38 +164,40 @@ class CustomizedAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// then the default specified in the property's documentation will be used.
   ///
   /// Typically used in the [Scaffold.appBar] property.
-  CustomizedAppBar(
-      {Key key,
-      this.leading,
-      this.automaticallyImplyLeading = true,
-      this.title,
-      this.actions,
-      this.flexibleSpace,
-      this.bottom,
-      this.elevation,
-      this.shape,
-      this.backgroundColor,
-      this.brightness,
-      this.iconTheme,
-      this.actionsIconTheme,
-      this.textTheme,
-      this.primary = true,
-      this.centerTitle,
-      this.titleSpacing = NavigationToolbar.kMiddleSpacing,
-      this.toolbarOpacity = 1.0,
-      this.bottomOpacity = 1.0,
-      this.gradientColors})
-      : assert(automaticallyImplyLeading != null),
+  CustomizedAppBar({
+    Key key,
+    this.leading,
+    this.automaticallyImplyLeading = true,
+    this.title,
+    this.actions,
+    this.flexibleSpace,
+    this.bottom,
+    this.elevation,
+    this.shape,
+    this.backgroundColor,
+    this.brightness,
+    this.iconTheme,
+    this.actionsIconTheme,
+    this.textTheme,
+    this.primary = true,
+    this.centerTitle,
+    this.titleSpacing = NavigationToolbar.kMiddleSpacing,
+    this.toolbarOpacity = 1.0,
+    this.bottomOpacity = 1.0,
+    this.gradientColors,
+    this.appBarHeight,
+  })  : assert(automaticallyImplyLeading != null),
         assert(elevation == null || elevation >= 0.0),
         assert(primary != null),
         assert(titleSpacing != null),
         assert(toolbarOpacity != null),
         assert(bottomOpacity != null),
-        preferredSize = Size.fromHeight(
+        preferredSize = Size.fromHeight(appBarHeight ??
             kToolbarHeight + (bottom?.preferredSize?.height ?? 0.0)),
         super(key: key);
   // 定义渐变颜色
   final List<Color> gradientColors;
+  final double appBarHeight;
 
   /// A widget to display before the [title].
   ///
@@ -582,7 +584,23 @@ class _CustomizedAppBarState extends State<CustomizedAppBar> {
       );
     }
 
-    if (widget.gradientColors != null) {
+    // 定义appbar的高度和渐变色
+    if (widget.gradientColors != null && widget.appBarHeight != null) {
+      appBar = Container(
+        height: widget.appBarHeight,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: widget.gradientColors,
+          ),
+        ),
+        child: appBar,
+      );
+    } else if (widget.appBarHeight != null) {
+      appBar = Container(
+        height: widget.appBarHeight,
+        child: appBar,
+      );
+    } else if (widget.gradientColors != null) {
       appBar = Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

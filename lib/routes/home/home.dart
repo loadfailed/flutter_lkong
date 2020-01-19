@@ -31,6 +31,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         title: buildTabBar(),
         centerTitle: true,
         elevation: 0.0,
+        appBarHeight: 100,
         // gradientColors: [Colors.cyan, Colors.blue, Colors.blueAccent],
       ),
       body: ListView.builder(
