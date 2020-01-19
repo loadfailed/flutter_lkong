@@ -585,22 +585,7 @@ class _CustomizedAppBarState extends State<CustomizedAppBar> {
     }
 
     // 定义appbar的高度和渐变色
-    if (widget.gradientColors != null && widget.appBarHeight != null) {
-      appBar = Container(
-        height: widget.appBarHeight,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: widget.gradientColors,
-          ),
-        ),
-        child: appBar,
-      );
-    } else if (widget.appBarHeight != null) {
-      appBar = Container(
-        height: widget.appBarHeight,
-        child: appBar,
-      );
-    } else if (widget.gradientColors != null) {
+    if (widget.gradientColors != null) {
       appBar = Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

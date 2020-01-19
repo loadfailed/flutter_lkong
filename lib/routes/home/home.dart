@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/common/http.dart';
 import 'package:myapp/api/homeApi/homeApi.dart';
 import 'package:myapp/components/CustomizedAppBar/CustomizedAppBar.dart';
+import 'package:myapp/components/CustomizedTabBar/CustomizedTabBar.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -30,8 +31,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       appBar: CustomizedAppBar(
         title: buildTabBar(),
         centerTitle: true,
-        elevation: 0.0,
-        appBarHeight: 100,
+        backgroundColor: Color(0xFFFFFFFF),
+        appBarHeight: 48,
         // gradientColors: [Colors.cyan, Colors.blue, Colors.blueAccent],
       ),
       body: ListView.builder(
@@ -44,9 +45,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Widget buildTabBar() {
-    return TabBar(
+    return CustomizedTabBar(
+      // indicator: BoxDecoration(),
       tabs: _titles.map((String title) {
-        return Tab(
+        return CustomizedTab(
           child: Text(
             title,
             style: TextStyle(
