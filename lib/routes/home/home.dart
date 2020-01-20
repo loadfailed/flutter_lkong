@@ -29,7 +29,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomizedAppBar(
-        title: buildTabBar(),
+        title: _buildTabBar(),
         backgroundColor: Color(0xFFFFFFFF),
         appBarHeight: 54,
         actions: <Widget>[
@@ -50,17 +50,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           DateTime dateTime = new DateTime.fromMillisecondsSinceEpoch(
               int.parse(item['dateline']) * 1000);
           return Card(
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  leading: Image(
-                    image: NetworkImage(
-                        "http://b-ssl.duitang.com/uploads/item/201607/26/20160726185736_yPmrE.thumb.224_0.jpeg"),
-                  ),
-                  title: Text(item['username']),
-                  subtitle: Text(dateTime.toString().substring(0, 16)),
-                ),
-              ],
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // leading: Image(
+                  //   image: NetworkImage(
+                  //       "http://b-ssl.duitang.com/uploads/item/201607/26/20160726185736_yPmrE.thumb.224_0.jpeg"),
+                  // ),
+                  _buildUserAvatar(item['username'], dateTime),
+                  _buildPostContent(item['message'])
+                ],
+              ),
             ),
           );
         },
@@ -68,7 +70,52 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget buildTabBar() {
+  // 返回用户头像和用户名
+  Widget _buildUserAvatar(String username, DateTime dateTime) {
+    return Chip(
+      avatar: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                  "http://b-ssl.duitang.com/uploads/item/201607/26/20160726185736_yPmrE.thumb.224_0.jpeg"),
+              fit: BoxFit.cover,
+            ),
+            color: Color(0xFFB8C7E0),
+            borderRadius: BorderRadius.circular(100),
+          ),
+        ),
+      ),
+      backgroundColor: Color(0xFFFFFFFF),
+      label: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            username,
+            style: TextStyle(fontSize: 14, height: 1.4),
+          ),
+          Text(
+            dateTime.toString().substring(0, 16),
+            style: TextStyle(fontSize: 12, color: Color(0xFF999999)),
+          )
+        ],
+      ),
+      // subtitle: Text(dateTime.toString().substring(0, 16)),
+    );
+  }
+
+  // 帖子内容的建设
+  Widget _buildPostContent(String content) {
+    return Container(
+      child: Text(
+        content,
+        style: TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _buildTabBar() {
     return CustomizedTabBar(
       indicator: BoxDecoration(
         borderRadius: BorderRadius.circular(100),
