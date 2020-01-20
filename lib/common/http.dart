@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:dio/adapter.dart';
-import 'package:myapp/common/global.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 
@@ -38,16 +37,16 @@ class Http {
       );
       dio = new Dio(options);
       // if (Global.isRelease) {
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-          (client) {
-        // config the http client
-        client.findProxy = (uri) {
-          return "PROXY 192.168.1.107:8888";
-        };
-        //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
-        client.badCertificateCallback =
-            (X509Certificate cert, String host, int port) => true;
-      };
+      // (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+      //     (client) {
+      //   // config the http client
+      //   client.findProxy = (uri) {
+      //     return "PROXY 192.168.1.107:8888";
+      //   };
+      //   //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
+      //   client.badCertificateCallback =
+      //       (X509Certificate cert, String host, int port) => true;
+      // };
       // }
       _setCookie();
     }

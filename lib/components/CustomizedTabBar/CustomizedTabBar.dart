@@ -52,22 +52,30 @@ class CustomizedTab extends StatelessWidget {
   /// and [child] arguments must not be used at the same time. The
   /// [iconMargin] is only useful when [icon] and either one of [text] or
   /// [child] is non-null.
-  const CustomizedTab({
-    Key key,
-    this.text,
-    this.icon,
-    this.iconMargin = const EdgeInsets.only(bottom: 10.0),
-    this.child,
-  })  : assert(text != null || child != null || icon != null),
-        assert(!(text != null &&
-            null !=
-                child)), // TODO(goderbauer): https://github.com/dart-lang/sdk/issues/34180
+  const CustomizedTab(
+      {Key key,
+      this.text,
+      this.icon,
+      this.iconMargin = const EdgeInsets.only(bottom: 10.0),
+      this.child,
+      this.tabHeight,
+      this.tabWidth,
+      this.textIconMargin})
+      : assert(text != null || child != null || icon != null),
+        assert(!(text != null && null != child)),
         super(key: key);
 
   /// The text to display as the tab's label.
   ///
   /// Must not be used in combination with [child].
   final String text;
+
+  // tab的高度
+  final double tabHeight;
+  // tab的宽度
+  final double tabWidth;
+  // tab的间距
+  final EdgeInsets textIconMargin;
 
   /// The widget to be used as the tab's label.
   ///
@@ -94,6 +102,7 @@ class CustomizedTab extends StatelessWidget {
     assert(debugCheckHasMaterial(context));
 
     double height;
+
     Widget label;
     if (icon == null) {
       height = _kTabHeight;
@@ -109,11 +118,15 @@ class CustomizedTab extends StatelessWidget {
         children: <Widget>[
           Container(
             child: icon,
-            margin: iconMargin,
+            margin: textIconMargin,
           ),
           _buildLabelText(),
         ],
       );
+    }
+
+    if (tabHeight != null) {
+      height = tabHeight;
     }
 
     return SizedBox(
@@ -179,7 +192,7 @@ class _TabStyle extends AnimatedWidget {
         themeData.primaryTextTheme.body2.color;
     final Color unselectedColor = unselectedLabelColor ??
         tabBarTheme.unselectedLabelColor ??
-        selectedColor.withAlpha(0xB2); // 70% alpha
+        selectedColor.withAlpha(0x66); // 70% alpha
     final Color color = selected
         ? Color.lerp(selectedColor, unselectedColor, animation.value)
         : Color.lerp(unselectedColor, selectedColor, animation.value);
@@ -622,6 +635,8 @@ class CustomizedTabBar extends StatefulWidget implements PreferredSizeWidget {
             (indicatorWeight != null && indicatorWeight > 0.0)),
         assert(indicator != null || (indicatorPadding != null)),
         super(key: key);
+
+  // tab的宽度
 
   /// Typically a list of two or more [Tab] widgets.
   ///
@@ -1093,9 +1108,9 @@ class _CustomizedTabBarState extends State<CustomizedTabBar> {
         onTap: () {
           _handleTap(index);
         },
-        // splashColor: Colors.transparent,
+        splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        child: Padding(
+        child: Container(
           padding: EdgeInsets.only(bottom: widget.indicatorWeight),
           child: Stack(
             children: <Widget>[

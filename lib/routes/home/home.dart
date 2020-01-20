@@ -13,7 +13,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   List _posts = [];
   int _nexttime = -1;
   int _curtime = -1;
-  List<String> _titles = ['我关注的', '只看主题', '与我相关'];
+  List<String> _titles = ['我关注的', '主题帖', '与我相关'];
   TabController _tabController;
 
   Http http = new Http();
@@ -30,15 +30,39 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: CustomizedAppBar(
         title: buildTabBar(),
-        centerTitle: true,
         backgroundColor: Color(0xFFFFFFFF),
-        appBarHeight: 48,
+        appBarHeight: 54,
+        actions: <Widget>[
+          Container(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(
+              Icons.search,
+              color: Color(0xFF666666),
+            ),
+          )
+        ],
         // gradientColors: [Colors.cyan, Colors.blue, Colors.blueAccent],
       ),
       body: ListView.builder(
         itemCount: _posts.length,
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(title: Text(_posts[index]['message']));
+          Map item = _posts[index];
+          DateTime dateTime = new DateTime.fromMillisecondsSinceEpoch(
+              int.parse(item['dateline']) * 1000);
+          return Card(
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  leading: Image(
+                    image: NetworkImage(
+                        "http://b-ssl.duitang.com/uploads/item/201607/26/20160726185736_yPmrE.thumb.224_0.jpeg"),
+                  ),
+                  title: Text(item['username']),
+                  subtitle: Text(dateTime.toString().substring(0, 16)),
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
@@ -46,14 +70,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   Widget buildTabBar() {
     return CustomizedTabBar(
-      // indicator: BoxDecoration(),
+      indicator: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        color: Color(0x0B000000),
+        // border: Border.all(color: Color(0xFFFFFFFF), width: 6),
+      ),
       tabs: _titles.map((String title) {
         return CustomizedTab(
+          tabHeight: 30.0,
           child: Text(
             title,
-            style: TextStyle(
-              fontSize: 16,
-            ),
+            style: TextStyle(fontSize: 16),
           ),
         );
       }).toList(),

@@ -8,6 +8,9 @@ import 'package:myapp/routes/index.dart';
 
 Dio dio = Dio();
 
+/// System overlays should be drawn with a dark color. Intended for
+/// applications with a light background.
+
 void main() => Global.init().then(
       (e) => runApp(
         new MyApp(),
