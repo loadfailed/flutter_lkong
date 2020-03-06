@@ -3,6 +3,7 @@ import 'package:myapp/common/http.dart';
 import 'package:myapp/api/homeApi/homeApi.dart';
 import 'package:myapp/components/CustomizedAppBar/CustomizedAppBar.dart';
 import 'package:myapp/components/CustomizedTabBar/CustomizedTabBar.dart';
+import 'package:myapp/components/PullToRefreshAndLoadingMore/PullToRefreshAndLoadingMore.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -25,6 +26,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _getPosts();
   }
 
+  _onRefresh() async {
+    var res = await HomeApi.getPosts();
+    return res;
+  }
+
+  _onLoading() async {
+    var res = await HomeApi.getPosts();
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,29 +54,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ],
         // gradientColors: [Colors.cyan, Colors.blue, Colors.blueAccent],
       ),
-      body: ListView.builder(
-        itemCount: _posts.length,
-        itemBuilder: (BuildContext context, int index) {
-          Map item = _posts[index];
-          DateTime dateTime = new DateTime.fromMillisecondsSinceEpoch(
-              int.parse(item['dateline']) * 1000);
-          return Card(
-            child: Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  // leading: Image(
-                  //   image: NetworkImage(
-                  //       "http://b-ssl.duitang.com/uploads/item/201607/26/20160726185736_yPmrE.thumb.224_0.jpeg"),
-                  // ),
-                  _buildUserAvatar(item['username'], dateTime),
-                  _buildPostContent(item['message'])
-                ],
-              ),
-            ),
-          );
-        },
+      // body: ListView.builder(
+      //   itemCount: _posts.length,
+      //   itemBuilder: (BuildContext context, int index) {
+      //     Map item = _posts[index];
+      //     DateTime dateTime = new DateTime.fromMillisecondsSinceEpoch(
+      //         int.parse(item['dateline']) * 1000);
+      //     return Card(
+      //       child: Container(
+      //         padding: EdgeInsets.all(10),
+      //         child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: <Widget>[
+      //             // leading: Image(
+      //             //   image: NetworkImage(
+      //             //       "http://b-ssl.duitang.com/uploads/item/201607/26/20160726185736_yPmrE.thumb.224_0.jpeg"),
+      //             // ),
+      //             _buildUserAvatar(item['username'], dateTime),
+      //             _buildPostContent(item['message'])
+      //           ],
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // ),
+      body: PullToRefreshAndLoadingMore(
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
       ),
     );
   }

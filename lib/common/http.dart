@@ -37,16 +37,16 @@ class Http {
       );
       dio = new Dio(options);
       // if (Global.isRelease) {
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-          (client) {
-        // config the http client
-        client.findProxy = (uri) {
-          return "PROXY 192.168.1.107:8888";
-        };
-        //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
-        client.badCertificateCallback =
-            (X509Certificate cert, String host, int port) => true;
-      };
+      // (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+      //     (client) {
+      //   // config the http client
+      //   client.findProxy = (uri) {
+      //     return "PROXY 192.168.1.107:8888";
+      //   };
+      //   //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
+      //   client.badCertificateCallback =
+      //       (X509Certificate cert, String host, int port) => true;
+      // };
       // }
       _setCookie();
     }
