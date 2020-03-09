@@ -75,11 +75,8 @@ class Http {
   post(url, {data}) async {
     Response response;
     try {
-      // cookieJar.loadForRequest(Uri.parse("http://lkong.cn/"));
       response = await dio.post(baseUrl + url, data: data);
-      print('Post Success --- $response');
     } on DioError catch (e) {
-      print('Post Error --- $e');
       formatError(e);
     }
     return jsonDecode(response.data);

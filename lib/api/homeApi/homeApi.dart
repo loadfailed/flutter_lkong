@@ -11,7 +11,7 @@ class HomeApi {
   static test() {
     int currentTimeMillis = new DateTime.now().millisecondsSinceEpoch;
     var res = _http.post('data&sars=index/&_=$currentTimeMillis');
-    print(res);
+    // print(res);
     return res;
   }
 }

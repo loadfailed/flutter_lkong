@@ -387,9 +387,9 @@ class CustomizedAppBar extends StatefulWidget implements PreferredSizeWidget {
         return false;
       case TargetPlatform.iOS:
         return actions == null || actions.length < 2;
-      case TargetPlatform.macOS:
-        // TODO: Handle this case.
-        break;
+      // case TargetPlatform.macOS:
+      // TODO: Handle this case.
+      // break;
     }
     return null;
   }
@@ -482,9 +482,9 @@ class _CustomizedAppBarState extends State<CustomizedAppBar> {
           break;
         case TargetPlatform.iOS:
           break;
-        case TargetPlatform.macOS:
-          // TODO: Handle this case.
-          break;
+        // case TargetPlatform.macOS:
+        // TODO: Handle this case.
+        // break;
       }
       title = DefaultTextStyle(
         style: centerStyle,

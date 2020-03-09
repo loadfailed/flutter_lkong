@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'package:myapp/models/index.dart';
 import 'package:myapp/util/getAvatarUrl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -23,6 +24,13 @@ class _PullToRefreshAndLoadingMoreState
   List datas = [];
   int nexttime = -1;
   int curtime = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    _onRefresh();
+  }
+
   void _onRefresh() async {
     var res = await widget.onRefresh();
     setState(() {
@@ -40,10 +48,10 @@ class _PullToRefreshAndLoadingMoreState
 
   @override
   Widget build(BuildContext context) {
-    _onRefresh();
     return SmartRefresher(
       enablePullDown: true,
       enablePullUp: true,
+      // header: WaterDropMaterialHeader(),
       header: WaterDropMaterialHeader(),
       footer: CustomFooter(
         builder: (BuildContext context, LoadStatus mode) {
@@ -71,17 +79,22 @@ class _PullToRefreshAndLoadingMoreState
       child: ListView.builder(
           itemCount: datas.length,
           itemBuilder: (BuildContext context, int index) {
-            Map item = datas[index];
+            Map post = datas[index];
             DateTime dateline = new DateTime.fromMicrosecondsSinceEpoch(
-                int.parse(item['dateline']) * 1000);
+                int.parse(post['dateline']) * 1000);
             return Card(
               child: Container(
                 padding: EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _buildUserAvatar(item['username'], dateline),
-                    _buildPostContent(item['message'])
+                    _buildUserAvatar(post['username'], post['uid'], dateline),
+                    Container(
+                      height: 1.0,
+                      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
+                      color: Color(0xFFEEEEEE),
+                    ),
+                    _buildPostContent(post['message'])
                   ],
                 ),
               ),
@@ -91,36 +104,24 @@ class _PullToRefreshAndLoadingMoreState
   }
 
   // 返回用户头像和用户名
-  Widget _buildUserAvatar(String username, DateTime dateTime) {
-    return Chip(
-      avatar: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(getAvatarUrl('avatar', '123456', 'middle')),
-              fit: BoxFit.cover,
-            ),
-            color: Color(0xFFB8C7E0),
-            borderRadius: BorderRadius.circular(100),
-          ),
+  Widget _buildUserAvatar(
+    String username,
+    String uid,
+    DateTime dateTime,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          username,
+          style:
+              TextStyle(fontSize: 14, height: 1.4, fontWeight: FontWeight.bold),
         ),
-      ),
-      backgroundColor: Color(0xFFFFFFFF),
-      label: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            username,
-            style: TextStyle(fontSize: 14, height: 1.4),
-          ),
-          Text(
-            dateTime.toString().substring(0, 16),
-            style: TextStyle(fontSize: 12, color: Color(0xFF999999)),
-          )
-        ],
-      ),
-      // subtitle: Text(dateTime.toString().substring(0, 16)),
+        Text(
+          dateTime.toString().substring(0, 16),
+          style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
+        )
+      ],
     );
   }
 

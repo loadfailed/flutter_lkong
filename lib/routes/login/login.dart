@@ -148,12 +148,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   // 登录方法
   void _onLogin() async {
-    Map data = {
-      "action": 'login',
-      "email": "190766630@qq.com",
-      "password": "lyr266419",
-      "rememberme": "on"
-    };
     if (_uEmailController.toString().isEmpty) {
       print('邮箱不能为空');
     } else if (_pwdController.toString().isEmpty) {

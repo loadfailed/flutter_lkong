@@ -21,8 +21,8 @@ class SpaceSpan extends TextSpan {
   final Widget widgetChild;
 }
 
-class ResetText extends StatelessWidget {
-  const ResetText(
+class Textarea extends StatelessWidget {
+  const Textarea(
       {Key key, this.contentWidth, this.contentHeight, this.widgetChild})
       : super(key: key);
   final double contentWidth;

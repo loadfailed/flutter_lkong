@@ -1,3 +1,4 @@
 export 'cacheConfig.dart' ; 
-export 'user.dart' ; 
+export 'post.dart' ; 
 export 'profile.dart' ; 
+export 'user.dart' ; 

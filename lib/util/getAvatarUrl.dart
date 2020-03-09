@@ -6,5 +6,5 @@ String getAvatarUrl(String type, String imgID, String size) {
   }
   String id =
       '${imgID.substring(0, 3)}/${imgID.substring(3, 5)}/${imgID.substring(5, 7)}/${imgID.substring(7)}';
-  return 'img.lkong.cn/$type/${id}_avatar_$size.jpg';
+  return 'http://img.lkong.cn/$type/${id}_avatar_$size.jpg';
 }
