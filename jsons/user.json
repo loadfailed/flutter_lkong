@@ -1,6 +1,16 @@
 {
     "uid": 0,
-    "name": "0",
-    "yousuu": "0",
-    "success": true
+    "customstatus": "",
+    "regdate": "",
+    "username": "",
+    "tmpphone": "",
+    "fansnum": 0,
+    "followuidnum": 0,
+    "posts": 0,
+    "threads": 0,
+    "digestposts": 0,
+    "punchallday": 0,
+    "punchday": 0,
+    "punchhighestday": 0,
+    "punchtime": 0
 }

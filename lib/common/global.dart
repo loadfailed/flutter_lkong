@@ -59,27 +59,15 @@ class ProfileChangeNotifier extends ChangeNotifier {
   }
 }
 
-class UserModel extends ProfileChangeNotifier {
-  User get user => _profile.user;
+class LoginStatusModel extends ProfileChangeNotifier {
+  LoginStatus get loginStatus => _profile.loginStatus;
   // 是否登陆
-  bool get isLogin => user != null;
+  bool get isLogin => loginStatus != null;
   // 用户信息发生变化，更新用户信息并通知依赖它的子孙Widgets更新
-  set user(User user) {
-    if (user?.uid != _profile.user?.uid) {
-      _profile.user = user;
+  set loginStatus(LoginStatus loginStatus) {
+    if (loginStatus?.uid != _profile.loginStatus?.uid) {
+      _profile.loginStatus = loginStatus;
       notifyListeners();
     }
   }
 }
-
-// 主题状态
-// class ThemeModel extends ProfileChangeNotifier {
-//   ColorSwatch get theme => Global.themes
-//       .firstWhere((e) => e.value == _profile.theme, orElse: () => Colors.blue);
-//   set theme(ColorSwatch color) {
-//     if (color != theme) {
-//       _profile.theme = color[500].value;
-//       notifyListeners();
-//     }
-//   }
-// }

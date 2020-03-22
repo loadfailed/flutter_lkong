@@ -3,26 +3,24 @@ import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:dio/adapter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 
-final String baseUrl = "http://lkong.cn/index.php?mod=";
+import 'package:path_provider/path_provider.dart';
+
+final String baseUrl = "http://lkong.cn";
 final int connectTimeout = 50000;
 final int receiveTimeout = 10000;
 
-class Http {
-  CancelToken cancelToken = new CancelToken();
-
-  static final Http _instance = Http._internal();
+class HttpUtil {
+  static final HttpUtil _instance = HttpUtil._internal();
   Dio dio;
-  factory Http() => _instance;
+  factory HttpUtil() => _instance;
 
-  Http._internal() {
-    // print(dio);
+  HttpUtil._internal() {
     // 初始化
     if (dio == null) {
       // 配置网络请求
-      Map<String, dynamic> _headers = {
+      Map<String, dynamic> headers = {
         'Accept': 'application/json, text/plain, */*',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-CN,zh;q=0.9',
@@ -33,27 +31,26 @@ class Http {
       BaseOptions options = new BaseOptions(
         baseUrl: baseUrl,
         contentType: 'application/x-www-form-urlencoded',
-        headers: _headers,
+        headers: headers,
       );
       dio = new Dio(options);
-      // if (Global.isRelease) {
+
+      // 配置抓包代理
       // (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
       //     (client) {
       //   // config the http client
       //   client.findProxy = (uri) {
-      //     return "PROXY 192.168.1.107:8888";
+      //     return "PROXY 172.20.10.4:8888";
       //   };
       //   //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
       //   client.badCertificateCallback =
       //       (X509Certificate cert, String host, int port) => true;
       // };
-      // }
-      _setCookie();
     }
   }
 
-  _setCookie() async {
-    // cookie持久化保存
+  // cookie持久化保存
+  setCookie() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
     var cookieJar = PersistCookieJar(dir: appDocPath + "/.cookies/");
@@ -62,9 +59,9 @@ class Http {
 
   get(url, {data}) async {
     Response response;
+    await setCookie();
     try {
       response = await dio.get(baseUrl + url, queryParameters: data);
-      print('Get Success --- ${response.data}');
       // 响应体
     } on DioError catch (e) {
       formatError(e);
@@ -74,27 +71,13 @@ class Http {
 
   post(url, {data}) async {
     Response response;
+    await setCookie();
     try {
       response = await dio.post(baseUrl + url, data: data);
     } on DioError catch (e) {
       formatError(e);
     }
     return jsonDecode(response.data);
-  }
-
-  downloadFile(url, savePath) async {
-    Response response;
-    try {
-      response = await dio.download(url, savePath,
-          onReceiveProgress: (int count, int total) {
-        // 进度
-        print('$count $total');
-      });
-      print('Download Success --- ${response.data}');
-    } on DioError catch (e) {
-      print('DownloadFile Error --- $e');
-      formatError(e);
-    }
   }
 
   void formatError(DioError e) {

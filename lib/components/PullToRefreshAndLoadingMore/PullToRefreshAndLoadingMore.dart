@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/components/ImageWidget/ImageWidget.dart';
+import 'package:myapp/components/Post/PostCard.dart';
+import 'package:myapp/util/Util.dart';
 // import 'package:myapp/models/index.dart';
 import 'package:myapp/util/getAvatarUrl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PullToRefreshAndLoadingMore extends StatefulWidget {
-  const PullToRefreshAndLoadingMore({
+  PullToRefreshAndLoadingMore({
     Key key,
     this.onRefresh,
     this.onLoading,
@@ -33,16 +36,16 @@ class _PullToRefreshAndLoadingMoreState
 
   void _onRefresh() async {
     var res = await widget.onRefresh();
-    setState(() {
-      datas = res['data'];
-      nexttime = res['nexttime'];
-      curtime = res['curtime'];
-    });
+    datas = res['data'].reversed.toList();
+    nexttime = res['nexttime'];
+    curtime = res['curtime'];
+    setState(() {});
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
-    await widget.onLoading();
+    var res = await widget.onLoading();
+    
     _refreshController.loadComplete();
   }
 
@@ -80,7 +83,7 @@ class _PullToRefreshAndLoadingMoreState
           itemCount: datas.length,
           itemBuilder: (BuildContext context, int index) {
             Map post = datas[index];
-            DateTime dateline = new DateTime.fromMicrosecondsSinceEpoch(
+            DateTime dateline = new DateTime.fromMillisecondsSinceEpoch(
                 int.parse(post['dateline']) * 1000);
             return Card(
               child: Container(
@@ -94,7 +97,10 @@ class _PullToRefreshAndLoadingMoreState
                       margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
                       color: Color(0xFFEEEEEE),
                     ),
-                    _buildPostContent(post['message'])
+                    PostCard(
+                      post: post['message'],
+                      fontSize: 16,
+                    ),
                   ],
                 ),
               ),
@@ -112,26 +118,31 @@ class _PullToRefreshAndLoadingMoreState
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(
-          username,
-          style:
-              TextStyle(fontSize: 14, height: 1.4, fontWeight: FontWeight.bold),
+        Row(
+          children: <Widget>[
+            ClipOval(
+              child: ImageWidget(
+                width: 38.0,
+                height: 38.0,
+                url: getAvatarUrl('avatar', uid, 'small'),
+                errorImagePath: 'images/noavatar_middle.png',
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 10.0),
+              child: Text(
+                username,
+                style: TextStyle(
+                    fontSize: 14, height: 1.4, fontWeight: FontWeight.bold),
+              ),
+            )
+          ],
         ),
         Text(
           dateTime.toString().substring(0, 16),
           style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
         )
       ],
-    );
-  }
-
-  // 帖子内容的建设
-  Widget _buildPostContent(String content) {
-    return Container(
-      child: Text(
-        content,
-        style: TextStyle(fontSize: 16),
-      ),
     );
   }
 }

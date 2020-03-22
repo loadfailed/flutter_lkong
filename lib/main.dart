@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:myapp/common/global.dart';
+import 'package:myapp/pages/index.dart';
+import 'package:myapp/pages/login/login.dart';
 
 import 'package:provider/provider.dart';
-
-import 'package:myapp/routes/index.dart';
 
 Dio dio = Dio();
 
@@ -23,20 +23,21 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         // ChangeNotifierProvider.value(value: ThemeModel()),
-        ChangeNotifierProvider.value(value: UserModel()),
+        ChangeNotifierProvider.value(value: LoginStatusModel()),
       ],
-      child: Consumer<UserModel>(
+      child: Consumer<LoginStatusModel>(
         builder: (BuildContext context, themeModel, Widget child) {
-          UserModel userModel = Provider.of<UserModel>(context);
+          LoginStatusModel loginStatusModel =
+              Provider.of<LoginStatusModel>(context);
           return MaterialApp(
             title: '我的APP',
             theme: ThemeData(
-                primaryColor: Color(0xff7DBA9A),
+                primaryColor: Color(0xFF4AA5FB),
                 backgroundColor: Color(0xFFf6f6f6)),
-            home: userModel.isLogin ? Home() : Login(),
+            home: loginStatusModel.isLogin ? Index() : Login(),
             routes: <String, WidgetBuilder>{
               "login": (context) => Login(),
-              "themes": (context) => Themes(),
+              "home": (context) => Index()
             },
           );
         },

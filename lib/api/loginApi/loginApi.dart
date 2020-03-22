@@ -2,7 +2,9 @@ import 'package:myapp/common/http.dart';
 
 // export Map ext;
 class LoginApi {
-  static Http _http = new Http();
+  static final String baseUrl = "http://lkong.cn/index.php?mod=";
+  static final HttpUtil httpUtil = HttpUtil();
+
   static login() async {
     Map<String, dynamic> data = {
       "action": 'login',
@@ -10,7 +12,6 @@ class LoginApi {
       "password": "lyr266419",
       "rememberme": "on"
     };
-    var res = await _http.post('login', data: data);
-    return res;
+    return await HttpUtil().post('/index.php?mod=login', data: data);
   }
 }

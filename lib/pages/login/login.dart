@@ -154,12 +154,13 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       // showToast();
       print('密码不能为空');
     } else {
-      User user;
+      LoginStatus loginStatus;
       try {
         var res = await LoginApi.login();
-        user = User.fromJson(res);
+        loginStatus = LoginStatus.fromJson(res);
         await zoomOutController.forward();
-        Provider.of<UserModel>(context, listen: false).user = user;
+        Provider.of<LoginStatusModel>(context, listen: false).loginStatus =
+            loginStatus;
       } catch (e) {
         // 登录失败就提示
         print(e);

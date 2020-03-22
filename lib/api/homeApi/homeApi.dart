@@ -2,16 +2,17 @@ import 'package:myapp/common/http.dart';
 
 // export Map ext;
 class HomeApi {
-  static Http _http = new Http();
+  static final String baseUrl = "http://lkong.cn/index.php?mod=";
+  static final HttpUtil httpUtil = HttpUtil();
+  static final int currentTimeMillis =
+      new DateTime.now().millisecondsSinceEpoch;
   static getPosts() async {
-    int currentTimeMillis = new DateTime.now().millisecondsSinceEpoch;
-    return await _http.post('data&sars=index/&_=$currentTimeMillis');
+    return await httpUtil
+        .post('/index.php?mod=data&sars=index/&_=$currentTimeMillis');
   }
 
-  static test() {
-    int currentTimeMillis = new DateTime.now().millisecondsSinceEpoch;
-    var res = _http.post('data&sars=index/&_=$currentTimeMillis');
-    // print(res);
-    return res;
+  static getMorePosts(nexttime) async {
+    return await httpUtil.post(
+        '/index.php?mod=data&sars=index/&nexttime=$nexttime&_=$currentTimeMillis');
   }
 }

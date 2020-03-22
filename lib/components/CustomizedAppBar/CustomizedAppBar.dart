@@ -72,7 +72,7 @@ class _ToolbarContainerLayout extends SingleChildLayoutDelegate {
 ///
 /// If the [leading] widget is omitted, but the [CustomizedAppBar] is in a [Scaffold] with
 /// a [Drawer], then a button will be inserted to open the drawer. Otherwise, if
-/// the nearest [Navigator] has any previous routes, a [BackButton] is inserted
+/// the nearest [Navigator] has any previous pages, a [BackButton] is inserted
 /// instead. This behavior can be turned off by setting the [automaticallyImplyLeading]
 /// to false. In that case a null leading widget will result in the middle/title widget
 /// stretching to start.
